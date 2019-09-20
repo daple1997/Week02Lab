@@ -61,47 +61,53 @@ public class ArithmeticCalculatorServlet extends HttpServlet {
   
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String first = request.getParameter("first");
-        String second = request.getParameter("second");
-        String result = request.getParameter("result");
-        String action = request.getParameter("math");
-        //        request.setAttribute("result","---");
-        if(first.equals("") || second.equals("")){
-            request.setAttribute("result","invalid");
+        try{
+            String first = request.getParameter("first");
+            String second = request.getParameter("second");
+            String result = request.getParameter("result");
+            String action = request.getParameter("math");
+            //        request.setAttribute("result","---");
+            if(first.equals("") || second.equals("")){
+                request.setAttribute("result","invalid");
+            }
+            else{
+                boolean b = true;
+                for(int i = 0; i < first.length(); i++){
+                    char c = first.charAt(i);
+                    if(!Character.isDigit(c)){
+                        b = false;
+                        request.setAttribute("result","invalid");
+                    }
+                }
+                for(int i = 0; i < second.length(); i++){
+                    char c = second.charAt(i);
+                    if(!Character.isDigit(c)){
+                        b = false;
+                        request.setAttribute("result","invalid");
+                    }
+                }
+                if(b == true){
+                    int firstNumber = new Integer(first);
+                    int secondNumber = new Integer(second);
+                    int sum = 0;
+                    if ("+".equals(action)) {
+                        sum = firstNumber + secondNumber;
+                    } else if ("-".equals(action)) {
+                        sum = firstNumber - secondNumber;
+                    } else if ("*".equals(action)){
+                        sum = firstNumber * secondNumber;
+                    } else if ("%".equals(action)){
+                        sum = firstNumber % secondNumber;
+                    }
+                    request.setAttribute("result",sum + "");
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+             
         }
-        else{
-            boolean b = true;
-            for(int i = 0; i < first.length(); i++){
-                char c = first.charAt(i);
-                if(!Character.isDigit(c)){
-                    b = false;
-                    request.setAttribute("result","invalid");
-                }
-            }
-            for(int i = 0; i < second.length(); i++){
-                char c = second.charAt(i);
-                if(!Character.isDigit(c)){
-                    b = false;
-                    request.setAttribute("result","invalid");
-                }
-            }
-            if(b == true){
-                int firstNumber = new Integer(first);
-                int secondNumber = new Integer(second);
-                int sum = 0;
-                if ("+".equals(action)) {
-                    sum = firstNumber + secondNumber;
-                } else if ("-".equals(action)) {
-                    sum = firstNumber - secondNumber;
-                } else if ("*".equals(action)){
-                    sum = firstNumber * secondNumber;
-                } else if ("%".equals(action)){
-                    sum = firstNumber % secondNumber;
-                }
-                request.setAttribute("result",sum + "");
-            }
-        }
+        getServletContext().getRequestDispatcher("/WEB-INF/arithmeticcalculator.jsp")
+                     .forward(request, response);
     }
         
         
